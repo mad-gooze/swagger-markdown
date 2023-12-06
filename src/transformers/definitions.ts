@@ -21,7 +21,7 @@ function parseProperties(definition: OpenAPIV2.SchemaObject): MDtableRow[] {
     const descriptionParts = [];
     if ('description' in prop) {
       descriptionParts.push(
-        md.string(prop.description.replace(/[\r\n]/g, ' ')).escape().get(),
+        md.string(prop.description.replace(/[\r\n]/g, '\n')).escape().get(),
       );
     }
     if ('enum' in prop) {
@@ -31,11 +31,17 @@ function parseProperties(definition: OpenAPIV2.SchemaObject): MDtableRow[] {
       );
     }
     if ('example' in prop) {
+      const renderedExample = JSON.stringify(prop.example, null, 4);
+      const isMultiline = renderedExample.split('\n').length > 1;
       descriptionParts.push(
-        md.string('Example:').italic().concat(` \`${JSON.stringify(prop.example)}\``).get(),
+        md.string('Example:').italic()
+          .concat(isMultiline
+            ? `\n\`\`\`json\n${renderedExample}\n\`\`\``
+            : ` \`${renderedExample}\``)
+          .get(),
       );
     }
-    const descriptionCell = descriptionParts.join('<br>');
+    const descriptionCell = descriptionParts.join('\n');
     const requiredCell = required.includes(propName) ? 'Yes' : 'No';
     tr.td(propName).td(typeCell).td(descriptionCell).td(requiredCell);
     rows.push(tr);
@@ -51,7 +57,7 @@ function parseProperties(definition: OpenAPIV2.SchemaObject): MDtableRow[] {
 function parsePrimitive(name: string, definition: OpenAPIV2.SchemaObject): MDtableRow {
   const tr = MDtableRow.tr();
   const typeCell = 'type' in definition ? definition.type : '';
-  const descriptionCell = ('description' in definition ? definition.description : '').replace(/[\r\n]/g, ' ');
+  const descriptionCell = ('description' in definition ? definition.description : '').replace(/[\r\n]/g, '\n');
   const requiredCell = '';
   tr.td(name)
     .td(Array.isArray(typeCell) ? typeCell.join(', ') : typeCell)

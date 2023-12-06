@@ -19,9 +19,9 @@ export class MDtableRow {
     if (!this._td.length) {
       return '';
     }
-    return `| ${this._td.map(
+    return `|| ${this._td.map(
       (d: MDstring | string) => (typeof d === 'string' ? d : d.get()),
-    ).join(' | ')} |`;
+    ).join(' | ')} ||`;
   }
 }
 
@@ -55,18 +55,10 @@ export class MDtable {
     const columns = this._th.length;
 
     if (columns) {
-      const th = `| ${this._th.map(
-        (d: MDstring | string) => (typeof d === 'string' ? d : d.get()),
-      ).join(' | ')} |`;
+      const th = `|| ${this._th.map(
+        (d: MDstring | string) => '**' + (typeof d === 'string' ? d : d.get()) + '**',
+      ).join(' | ')} ||`;
       result.push(th);
-
-      const thead = `| ${
-        this._th.map(
-          (el: string | MDstring) => '-'.repeat(el.length > 3 ? el.length : 3)
-          ,
-        ).join(' | ')
-      } |`;
-      result.push(thead);
     }
 
     if (this._tr.length) {
@@ -75,6 +67,6 @@ export class MDtable {
       });
     }
 
-    return result.join('\n');
+    return '#|\n' + result.join('\n') + '\n|#';
   }
 }

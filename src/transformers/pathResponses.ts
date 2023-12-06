@@ -36,7 +36,7 @@ export function transformResponses(responses: OpenAPIV2.ResponsesObject) {
     const description = md.string();
     if ('description' in response) {
       description.concat(
-        md.string(response.description.replace(/[\r\n]/g, ' ')).escape(),
+        md.string(response.description.replace(/[\r\n]/g, '\n')).escape(),
       );
     }
     if ('headers' in response) {
@@ -49,13 +49,13 @@ export function transformResponses(responses: OpenAPIV2.ResponsesObject) {
       Object.entries(response.examples).forEach(([contentType, example]) => {
         let formattedExample = typeof example === 'string' ? example : JSON.stringify(example, null, '  ');
 
-        formattedExample = formattedExample.replace(/\r?\n/g, '<br>');
+        formattedExample = formattedExample.replace(/\r?\n/g, '<br pathResponses>');
         const contentTypeMd = md.string(contentType).italic().get();
 
         description
-          .concat('<br><br>')
+          .concat('\n\n')
           .concat(md.string('Example').bold())
-          .concat(` (${contentTypeMd}):<br><pre>${formattedExample}</pre>`);
+          .concat(` (${contentTypeMd}):\n<pre>${formattedExample}</pre>`);
       });
     }
     tr.td(description);

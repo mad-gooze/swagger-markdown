@@ -40,7 +40,7 @@ export const transformSecurityDefinitions = (
           table.tr()
             .td(scope)
             .td(
-              securityDefinitions[type][value][scope].replace(/[\r\n]/g, ' '),
+              securityDefinitions[type][value][scope].replace(/[\r\n]/g, '\n'),
             );
         });
         return;
@@ -55,7 +55,7 @@ export const transformSecurityDefinitions = (
         }
         table.tr()
           .td(key)
-          .td(securityDefinitions[type][value].replace(/[\r\n]/g, ' '));
+          .td(securityDefinitions[type][value].replace(/[\r\n]/g, '\n'));
       }
     });
     md.line(table);

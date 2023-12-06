@@ -23,7 +23,7 @@ export const transformParameters = (
       tr.td(keys.in || '');
       // description
       if ('description' in keys) {
-        tr.td(md.string(keys.description.replace(/[\r\n]/g, ' ')).escape());
+        tr.td(md.string(keys.description.replace(/[\r\n]/g, '\n')).escape());
       } else {
         tr.td('');
       }
